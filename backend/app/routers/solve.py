@@ -14,16 +14,18 @@ def solve_problem(request: ProblemRequest):
     except Exception as e:
         raise HTTPException(status_code=422, detail=f"LLM parsing failed: {e}")
 
+    # If the LLM correctly identified the problem as unsolvable/ambiguous,
+    # this is NOT an error — return it as a normal 200 response so the frontend
+    # can display the clarification message nicely, instead of as a scary error.
+    if not plan.is_solvable:
+        return plan
+
     executed_plan = execute_plan(plan)
-
-    # TEMPORARY DEBUG: print full plan to terminal so we can see exactly what happened, even on failure
-    print("\n\n===== FULL EXECUTED PLAN (DEBUG) =====")
-    print(executed_plan.model_dump_json(indent=2))
-    print("===== END DEBUG =====\n\n")
-
     verification = verify_plan_execution(executed_plan)
 
     if not verification.is_valid:
+        # This IS a genuine failure (execution crashed, or LLM's answer didn't
+        # match the engine's computed result) — a real error worth flagging distinctly.
         detail = verification.reason
         if verification.mismatch_details:
             detail += f" | Details: {verification.mismatch_details}"
