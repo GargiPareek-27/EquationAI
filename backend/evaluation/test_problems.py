@@ -1,7 +1,6 @@
 # backend/evaluation/test_problems.py
 
 TEST_PROBLEMS = [
-    # --- Category: Basic arithmetic word problems ---
     {
         "id": "arith_01",
         "category": "arithmetic_word_problem",
@@ -14,8 +13,6 @@ TEST_PROBLEMS = [
         "problem": "A store sells pens for $2 each and notebooks for $5 each. Ravi bought 4 pens and 3 notebooks. How much did he spend in total?",
         "expected_answer": "23",
     },
-
-    # --- Category: Unit conversion / rate problems ---
     {
         "id": "rate_01",
         "category": "unit_conversion",
@@ -28,16 +25,12 @@ TEST_PROBLEMS = [
         "problem": "A car travels at 90 km/h for 2.5 hours. How far does it travel, in meters?",
         "expected_answer": "225000",
     },
-
-    # --- Category: Systems of equations ---
     {
         "id": "algebra_01",
         "category": "systems_of_equations",
         "problem": "The sum of two numbers is 30 and their difference is 4. Find the larger number.",
         "expected_answer": "17",
     },
-
-    # --- Category: Standard calculus (area, definite integrals) ---
     {
         "id": "calc_01",
         "category": "definite_integral",
@@ -50,8 +43,6 @@ TEST_PROBLEMS = [
         "problem": "Find the area between the curves y = x^2 and y = 4.",
         "expected_answer": "32/3",
     },
-
-    # --- Category: Hard integration (substitution tricks) ---
     {
         "id": "calc_hard_01",
         "category": "hard_integration",
@@ -64,29 +55,27 @@ TEST_PROBLEMS = [
         "problem": "Evaluate the definite integral of ln(1 + tan(x)) from 0 to pi/4.",
         "expected_answer": "pi*log(2)/8",
     },
-
-    # --- Category: Deliberately ambiguous / unsolvable (tests is_solvable handling) ---
     {
         "id": "ambiguous_01",
         "category": "ambiguous_input",
         "problem": "Find x.",
-        "expected_answer": None,  # should be flagged is_solvable: false
+        "expected_answer": None,
+        "expect_unsolvable": True,
     },
     {
         "id": "ambiguous_02",
         "category": "ambiguous_input",
         "problem": "John is twice as old as his friend. How old is John?",
-        "expected_answer": None,  # underspecified — no absolute age given
+        "expected_answer": None,
+        "expect_unsolvable": True,
     },
-
-    # --- Category: Nonsensical / adversarial input (tests robustness) ---
     {
         "id": "nonsense_01",
         "category": "nonsensical_input",
         "problem": "What color is the number seven?",
-        "expected_answer": None,  # should gracefully decline, not crash
+        "expected_answer": None,
+        "expect_unsolvable": True,
     },
-    # --- Category: Differential equations ---
     {
         "id": "de_01",
         "category": "differential_equations",
@@ -97,10 +86,9 @@ TEST_PROBLEMS = [
         "id": "de_02",
         "category": "differential_equations",
         "problem": "Find the general solution to the differential equation y'' - 5y' + 6y = 0.",
-        "expected_answer": None,  # multiple equivalent forms possible (C1*exp(2x)+C2*exp(3x)) — check manually, not auto-scored
+        "expected_answer": None,
+        "expect_unsolvable": False,
     },
-
-    # --- Category: Probability / combinatorics ---
     {
         "id": "prob_01",
         "category": "probability",
@@ -113,8 +101,6 @@ TEST_PROBLEMS = [
         "problem": "In how many ways can 4 distinct books be arranged on a shelf if 2 specific books must always be next to each other?",
         "expected_answer": "12",
     },
-
-    # --- Category: Geometry / coordinate geometry ---
     {
         "id": "geo_01",
         "category": "coordinate_geometry",
@@ -125,38 +111,33 @@ TEST_PROBLEMS = [
         "id": "geo_02",
         "category": "coordinate_geometry",
         "problem": "Find the equation of the line passing through (2, 3) and (4, 7), in the form y = mx + c.",
-        "expected_answer": None,  # y = 2x - 1 — check manually, multiple valid representations
+        "expected_answer": None,
+        "expect_unsolvable": False,
     },
-
-    # --- Category: Series / sequences ---
     {
         "id": "series_01",
         "category": "series",
         "problem": "Find the sum of the infinite geometric series 1 + 1/3 + 1/9 + 1/27 + ...",
         "expected_answer": "3/2",
     },
-
-    # --- Category: Matrices / linear algebra ---
     {
         "id": "matrix_01",
         "category": "linear_algebra",
         "problem": "Find the determinant of the matrix [[2, 3], [4, 1]].",
         "expected_answer": "-10",
     },
-
-    # --- Category: Genuinely hard integration (another substitution-trick problem, less famous than the King's Property ones) ---
     {
         "id": "calc_hard_03",
         "category": "hard_integration",
         "problem": "Evaluate the integral of 1/(1 + sqrt(x)) dx.",
-        "expected_answer": None,  # 2*sqrt(x) - 2*log(1+sqrt(x)) + C — indefinite, has a constant of integration, check manually
+        "expected_answer": None,
+        "expect_unsolvable": False,
     },
-
-    # --- Category: A trickier ambiguous case (tests whether the LLM over-assumes) ---
     {
         "id": "ambiguous_03",
         "category": "ambiguous_input",
         "problem": "A rectangle has a perimeter of 20. What is its area?",
-        "expected_answer": None,  # genuinely underdetermined — infinitely many rectangles have perimeter 20 with different areas
+        "expected_answer": None,
+        "expect_unsolvable": True,
     },
 ]

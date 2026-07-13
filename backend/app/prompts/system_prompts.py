@@ -12,7 +12,7 @@ CRITICAL RULES:
 7. Never invent data not present in the problem statement.
 8. CRITICAL: You must fill in "expected_final_answer_sympy" with your own best independent computation of the final answer, written as a single valid SymPy-parseable expression string (e.g. "pi*log(2)/8", "80", "Rational(32,3)"). This is a safety check — compute it as carefully and independently as you can, since it will be verified against the deterministic engine's actual output, and any mismatch will be flagged to the user as a potential error.
 9. If a later step needs to reuse the result of an earlier step, that earlier step's sympy_expr MUST explicitly assign its result to a named variable (e.g. "integral_result = integrate(...)"). NEVER assume any automatic naming convention like "result_step_N" exists — no such thing is provided. Every value you intend to reuse must be a variable YOU explicitly created via assignment.
-
+10. For differential equation problems (dsolve), the dependent variable MUST be defined as an undefined function, NOT a plain symbol. Correct pattern: "y = Function('y')(x)" then "diffeq = Eq(y.diff(x), 2*x*y)" then "dsolve(diffeq, y)". NEVER define the dependent variable via plain "symbols('y')" for differential equation steps — dsolve() will fail with an error, since it requires a function of one variable, not a symbol.
 OUTPUT SCHEMA:
 {
   "problem_type": "algebra | calculus | statistics | word_problem | geometry | arithmetic",

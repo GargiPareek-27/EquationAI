@@ -28,7 +28,6 @@ def save_results(results):
         json.dump(results, f, indent=2)
 
 
-# backend/evaluation/run_evaluation.py — update run_single_test to save the full plan on failure
 def run_single_test(test_case):
     problem_text = test_case["problem"]
     try:
@@ -38,11 +37,17 @@ def run_single_test(test_case):
 
         last_result = executed_plan.steps[-1].result if executed_plan.steps else None
         expected = test_case["expected_answer"]
+        expect_unsolvable = test_case.get("expect_unsolvable", False)
 
-        if expected is None:
+        if expect_unsolvable:
             test_passed = not executed_plan.is_solvable
-        else:
+            needs_manual_review = False
+        elif expected is not None:
             test_passed = verification.is_valid
+            needs_manual_review = False
+        else:
+            test_passed = None
+            needs_manual_review = True
 
         result = {
             "id": test_case["id"],
@@ -55,11 +60,11 @@ def run_single_test(test_case):
             "verification_reason": verification.reason,
             "mismatch_details": verification.mismatch_details,
             "test_passed": test_passed,
+            "needs_manual_review": needs_manual_review,
             "status": "COMPLETED",
             "timestamp": datetime.now().isoformat(),
         }
 
-        # NEW: save the full step-by-step plan whenever verification fails, for debugging
         if not verification.is_valid:
             result["full_plan_debug"] = executed_plan.model_dump()
 
@@ -77,21 +82,20 @@ def run_single_test(test_case):
 
 
 def compute_test_passed(result, test_case_lookup):
-    """Recomputes test_passed for results saved before this field existed, for backward compatibility."""
     if "test_passed" in result:
         return result["test_passed"]
     if result["status"] != "COMPLETED":
         return False
     test_case = test_case_lookup.get(result["id"])
-    if test_case and test_case["expected_answer"] is None:
+    if test_case and test_case.get("expect_unsolvable"):
         return not result.get("is_solvable", True)
+    if test_case and test_case["expected_answer"] is None:
+        return None  # needs manual review, old format
     return result.get("verification_passed", False)
 
 
 def run_evaluation():
     results = load_existing_results()
-
-    # Only skip tests that ACTUALLY completed successfully — retry anything that errored.
     completed_ids = {k for k, v in results.items() if v.get("status") == "COMPLETED"}
     remaining = [t for t in TEST_PROBLEMS if t["id"] not in completed_ids]
 
@@ -113,7 +117,10 @@ def run_evaluation():
 
         print(f"    Status: {result['status']}")
         if result["status"] == "COMPLETED":
-            print(f"    Solvable: {result['is_solvable']} | Test passed: {result['test_passed']}")
+            if result.get("needs_manual_review"):
+                print(f"    Solvable: {result['is_solvable']} | NEEDS MANUAL REVIEW — check final_result: {result['final_result']}")
+            else:
+                print(f"    Solvable: {result['is_solvable']} | Test passed: {result['test_passed']}")
         else:
             print(f"    Error: {result.get('error', 'unknown')[:150]}")
         time.sleep(DELAY_BETWEEN_CALLS_SECONDS)
@@ -131,19 +138,26 @@ def print_summary(results):
     total = len(results)
     completed = [r for r in results.values() if r["status"] == "COMPLETED"]
     errored = [r for r in results.values() if r["status"] == "ERROR"]
-    truly_passed = [r for r in completed if compute_test_passed(r, test_case_lookup)]
+
+    auto_scored = [r for r in completed if not r.get("needs_manual_review")]
+    manual_review = [r for r in completed if r.get("needs_manual_review")]
+    auto_passed = [r for r in auto_scored if compute_test_passed(r, test_case_lookup)]
 
     print(f"Total test cases: {total}")
     print(f"Completed: {len(completed)} | Errored: {len(errored)}")
-    print(f"Correctly handled: {len(truly_passed)}/{len(completed)}")
+    print(f"Auto-scored, passed: {len(auto_passed)}/{len(auto_scored)}")
+    print(f"Needs manual review (multiple valid answer formats): {len(manual_review)}")
+    if manual_review:
+        print("  -> " + ", ".join(r["id"] for r in manual_review))
 
     print("\nBy category:")
     categories = set(r["category"] for r in results.values())
     for cat in sorted(categories):
         cat_results = [r for r in results.values() if r["category"] == cat]
-        cat_completed = [r for r in cat_results if r["status"] == "COMPLETED"]
-        cat_passed = [r for r in cat_completed if compute_test_passed(r, test_case_lookup)]
-        print(f"  {cat}: {len(cat_passed)}/{len(cat_results)} passed ({len(cat_completed)} completed)")
+        cat_auto = [r for r in cat_results if r["status"] == "COMPLETED" and not r.get("needs_manual_review")]
+        cat_passed = [r for r in cat_auto if compute_test_passed(r, test_case_lookup)]
+        cat_manual = [r for r in cat_results if r.get("needs_manual_review")]
+        print(f"  {cat}: {len(cat_passed)}/{len(cat_auto)} passed" + (f" (+{len(cat_manual)} manual review)" if cat_manual else ""))
 
     print("\nDetailed results saved to:", RESULTS_FILE)
     print("=" * 60)

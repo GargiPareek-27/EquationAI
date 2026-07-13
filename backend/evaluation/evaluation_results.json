@@ -254,17 +254,54 @@
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
-    "test_passed": false,
+    "test_passed": null,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:10:22.995204"
+    "timestamp": "2026-07-11T08:10:22.995204",
+    "needs_manual_review": true
+  },
+  "geo_02": {
+    "id": "geo_02",
+    "category": "coordinate_geometry",
+    "problem": "Find the equation of the line passing through (2, 3) and (4, 7), in the form y = mx + c.",
+    "expected_answer": null,
+    "is_solvable": true,
+    "final_result": "Eq(y, 2.0*x - 1.0)",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": null,
+    "status": "COMPLETED",
+    "timestamp": "2026-07-13T07:39:38.792072",
+    "needs_manual_review": true
+  },
+  "calc_hard_03": {
+    "id": "calc_hard_03",
+    "category": "hard_integration",
+    "problem": "Evaluate the integral of 1/(1 + sqrt(x)) dx.",
+    "expected_answer": null,
+    "is_solvable": true,
+    "final_result": "2*sqrt(x) - 2*log(sqrt(x) + 1)",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": null,
+    "status": "COMPLETED",
+    "timestamp": "2026-07-13T07:39:47.862686",
+    "needs_manual_review": true
   },
   "de_01": {
     "id": "de_01",
     "category": "differential_equations",
     "problem": "Solve the differential equation dy/dx = 2xy with the initial condition y(0) = 1.",
     "expected_answer": "exp(x**2)",
-    "status": "ERROR",
-    "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\nPlease retry in 21.741432852s. [links {\n  description: \"Learn more about Gemini API quotas\"\n  url: \"https://ai.google.dev/gemini-api/docs/rate-limits\"\n}\n, violations {\n  quota_metric: \"generativelanguage.googleapis.com/generate_content_free_tier_requests\"\n  quota_id: \"GenerateRequestsPerDayPerProjectPerModel-FreeTier\"\n  quota_dimensions {\n    key: \"model\"\n    value: \"gemini-2.5-flash\"\n  }\n  quota_dimensions {\n    key: \"location\"\n    value: \"global\"\n  }\n  quota_value: 20\n}\n, retry_delay {\n  seconds: 21\n}\n]",
-    "timestamp": "2026-07-11T08:21:37.740375"
+    "is_solvable": true,
+    "final_result": "Eq(y(x), exp(x**2))",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-07-13T07:49:38.591200"
   }
 }
