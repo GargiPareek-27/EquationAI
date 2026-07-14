@@ -1,3 +1,4 @@
+// frontend/components/StepRenderer.tsx
 "use client";
 
 import { InlineMath } from "react-katex";
@@ -18,11 +19,19 @@ export default function StepRenderer({ step }: { step: Step }) {
   const isError = step.result?.startsWith("ERROR");
 
   return (
-    <div className={`p-4 border-l-4 rounded-r-lg mb-3 ${isError ? "border-red-500 bg-red-50" : "border-blue-500 bg-blue-50"}`}>
-      <div className="text-sm text-gray-500 mb-1">Step {step.step_id}</div>
-      <div className="text-lg text-gray-900 font-medium">{renderMixedContent(step.description_latex)}</div>
+    <div
+      className={`rounded-lg px-4 py-3 ${
+        isError ? "bg-[#2A1414] border border-[#8B3A3A]" : "bg-[#F5F0E4]"
+      }`}
+    >
+      <div className={`text-xs mb-1 ${isError ? "text-[#D99]" : "text-[#8A7F66]"}`}>
+        Step {step.step_id}
+      </div>
+      <div className={`font-serif text-[15px] ${isError ? "text-[#E88]" : "text-[#2A2114]"}`}>
+        {renderMixedContent(step.description_latex)}
+      </div>
       {step.result && (
-        <div className={`mt-2 text-sm font-mono ${isError ? "text-red-700" : "text-gray-700"}`}>
+        <div className={`mt-1.5 text-sm font-mono ${isError ? "text-[#D99]" : "text-[#5C5340]"}`}>
           → {step.result}
         </div>
       )}
