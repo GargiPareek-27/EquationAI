@@ -1,14 +1,19 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from app.routers import solve
 
 app = FastAPI(title="EquationAI API")
 
-# Allow your Next.js frontend (localhost:3000) to call this API during development
+allowed_origins = [
+    "http://localhost:3000",
+    os.getenv("FRONTEND_URL", ""),
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[origin for origin in allowed_origins if origin],
     allow_methods=["*"],
     allow_headers=["*"],
 )
