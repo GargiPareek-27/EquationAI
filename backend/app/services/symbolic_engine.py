@@ -29,8 +29,8 @@ def clean_result(value):
                 if isinstance(numeric_value, sympy.Basic) and numeric_value.has(sympy.Integral):
                     raise ValueError("Still unevaluated after evalf()")
                 return f"{clean_result(numeric_value)} (numerically approximated - closed-form not found)"
-            except Exception as e:
-                return f"{str(value)} [DEBUG: evalf failed with: {type(e).__name__}: {e}]"
+            except Exception:
+                return str(value)
 
         if isinstance(value, (list, tuple)):
             cleaned = [clean_number(v) for v in value]
@@ -43,7 +43,6 @@ def clean_result(value):
     except Exception:
         return str(value)
 
-# backend/app/services/symbolic_engine.py — fix the assignment branch to use clean_result, not clean_number
 def execute_plan(plan: SolutionPlan) -> SolutionPlan:
     safe_globals = {"__builtins__": {}}
     safe_globals.update(SAFE_SYMPY_NAMES)
@@ -62,8 +61,6 @@ def execute_plan(plan: SolutionPlan) -> SolutionPlan:
                 new_keys = keys_after - keys_before
 
                 if new_keys:
-                    # FIX: use clean_result (handles Integral fallback), not clean_number
-                    # (which only handles plain floats and misses unevaluated symbolic results)
                     assigned = {k: clean_result(namespace[k]) for k in new_keys}
                     step.result = str(assigned) if len(assigned) > 1 else list(assigned.values())[0]
                 else:
