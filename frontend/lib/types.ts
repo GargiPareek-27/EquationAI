@@ -21,4 +21,5 @@ export interface SolutionPlan {
   steps: Step[];
   final_answer_variable: string | null;
   final_answer_units: string | null;
+  verification_warning: string | null;
 }

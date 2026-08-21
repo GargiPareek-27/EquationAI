@@ -7,6 +7,7 @@ from app.services.verifier import verify_plan_execution
 
 router = APIRouter()
 
+
 @router.post("/solve", response_model=SolutionPlan)
 def solve_problem(request: ProblemRequest):
     try:
@@ -24,11 +25,23 @@ def solve_problem(request: ProblemRequest):
     verification = verify_plan_execution(executed_plan)
 
     if not verification.is_valid:
-        # This IS a genuine failure (execution crashed, or LLM's answer didn't
-        # match the engine's computed result) — a real error worth flagging distinctly.
-        detail = verification.reason
-        if verification.mismatch_details:
-            detail += f" | Details: {verification.mismatch_details}"
-        raise HTTPException(status_code=500, detail=detail)
+        if verification.hard_failure:
+            # No usable answer exists at all (execution genuinely crashed,
+            # or nothing was generated) — this really is a hard error.
+            detail = verification.reason
+            if verification.mismatch_details:
+                detail += f" | Details: {verification.mismatch_details}"
+            raise HTTPException(status_code=500, detail=detail)
+        else:
+            # The engine DID produce a real answer — the LLM's own separate
+            # self-check just disagreed with it. Don't discard a correct
+            # computation because of that; surface it with a warning so the
+            # user (and you, during eval review) can see both the answer
+            # and the fact that confidence is reduced.
+            warning = verification.reason
+            if verification.mismatch_details:
+                warning += f" | {verification.mismatch_details}"
+            executed_plan.verification_warning = warning
+            return executed_plan
 
     return executed_plan

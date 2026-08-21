@@ -58,6 +58,17 @@ export default function Home() {
 
       {plan && plan.is_solvable && (
         <div className="w-full max-w-2xl flex flex-col gap-3">
+          {plan.verification_warning && (
+            <div className="p-4 bg-[#2A2515] border border-[#6B5A2E] rounded-lg">
+              <div className="font-medium text-[#D4A84E] mb-1">Lower-confidence result</div>
+              <div className="text-[#B8AC8E] text-sm">
+                The steps below were computed successfully, but the AI&apos;s own independent
+                sanity-check produced a different answer than the computation. Double-check
+                this result before relying on it.
+              </div>
+            </div>
+          )}
+
           {plan.steps.map((step) => (
             <StepRenderer key={step.step_id} step={step} />
           ))}
@@ -67,7 +78,7 @@ export default function Home() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
               <span className="font-serif text-[#FAC775] text-lg">
-                Verified answer: {plan.steps[plan.steps.length - 1]?.result} {plan.final_answer_units}
+                {plan.verification_warning ? "Computed answer" : "Verified answer"}: {plan.steps[plan.steps.length - 1]?.result} {plan.final_answer_units}
               </span>
             </div>
           )}
