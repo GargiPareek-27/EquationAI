@@ -1,16 +1,13 @@
 # backend/app/services/llm_parser.py
-import os
 import json
-from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from app.config import settings
 from app.models.schemas import SolutionPlan
 from app.prompts.system_prompts import MATH_PARSER_SYSTEM_PROMPT
 
-load_dotenv()
-
 client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY"),
+    api_key=settings.gemini_api_key,
     http_options=types.HttpOptions(timeout=60000),  # milliseconds, not seconds
 )
 
@@ -53,13 +50,17 @@ RESPONSE_SCHEMA = {
     "required": ["problem_type", "is_solvable", "variables", "steps"],
 }
 
-MODEL_NAME = "gemini-2.5-flash"
+MODEL_NAME = settings.gemini_model_name
 
 
-def parse_problem_to_plan(problem_text: str) -> SolutionPlan:
+def _call_llm(problem_text: str, repair_note: str | None = None) -> str:
+    """Makes one Gemini call. If repair_note is set, it's appended to the user
+    content so the model can self-correct a previous malformed response."""
+    contents = problem_text if repair_note is None else f"{problem_text}\n\n{repair_note}"
+
     response = client.models.generate_content(
         model=MODEL_NAME,
-        contents=problem_text,
+        contents=contents,
         config=types.GenerateContentConfig(
             system_instruction=MATH_PARSER_SYSTEM_PROMPT,
             response_mime_type="application/json",
@@ -75,6 +76,24 @@ def parse_problem_to_plan(problem_text: str) -> SolutionPlan:
             "This problem likely requires more steps than the token budget allows."
         )
 
-    raw_text = response.text.strip()
-    plan_dict = json.loads(raw_text)
-    return SolutionPlan(**plan_dict)
+    return response.text.strip()
+
+
+def parse_problem_to_plan(problem_text: str) -> SolutionPlan:
+    """Parses a problem into a SolutionPlan. On a malformed/unparseable first
+    response, retries once with the exact parse error appended, giving the
+    model a chance to self-correct before we give up."""
+    raw_text = _call_llm(problem_text)
+
+    try:
+        plan_dict = json.loads(raw_text)
+        return SolutionPlan(**plan_dict)
+    except Exception as first_error:
+        repair_note = (
+            "SYSTEM: Your previous response could not be parsed as valid JSON "
+            f"matching the required schema. Error: {first_error}. "
+            "Re-emit ONLY the corrected JSON object, nothing else."
+        )
+        raw_text = _call_llm(problem_text, repair_note=repair_note)
+        plan_dict = json.loads(raw_text)  # let this raise if the retry also fails
+        return SolutionPlan(**plan_dict)

@@ -1,14 +1,14 @@
 # backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
+from app.config import settings
 from app.routers import solve
 
 app = FastAPI(title="EquationAI API")
 
 allowed_origins = [
     "http://localhost:3000",
-    os.getenv("FRONTEND_URL", ""),
+    settings.frontend_url,
 ]
 
 app.add_middleware(
@@ -19,6 +19,7 @@ app.add_middleware(
 )
 
 app.include_router(solve.router, prefix="/api")
+
 
 @app.get("/")
 def health_check():

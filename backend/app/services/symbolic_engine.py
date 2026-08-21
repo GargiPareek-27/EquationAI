@@ -1,8 +1,8 @@
 # backend/app/services/symbolic_engine.py
 import sympy
 from app.models.schemas import SolutionPlan
+from app.services.sandbox_executor import run_in_sandbox
 
-SAFE_SYMPY_NAMES = {name: getattr(sympy, name) for name in dir(sympy) if not name.startswith("_")}
 
 def clean_number(value):
     """Cleans a single numeric value: integer-valued floats become ints."""
@@ -11,6 +11,7 @@ def clean_number(value):
             return sympy.Integer(int(float(value)))
         return round(float(value), 4)
     return value
+
 
 def clean_result(value):
     """Recursively cleans numbers inside lists, tuples, and dicts, then stringifies.
@@ -43,20 +44,19 @@ def clean_result(value):
     except Exception:
         return str(value)
 
+
 def execute_plan(plan: SolutionPlan) -> SolutionPlan:
-    safe_globals = {"__builtins__": {}}
-    safe_globals.update(SAFE_SYMPY_NAMES)
     namespace = {}
 
     for step in plan.steps:
         code = step.sympy_expr.strip()
         try:
-            exec(f"_result = ({code})", safe_globals, namespace)
+            run_in_sandbox(f"_result = ({code})", namespace)
             step.result = clean_result(namespace.get("_result"))
         except SyntaxError:
             try:
                 keys_before = set(namespace.keys())
-                exec(code, safe_globals, namespace)
+                run_in_sandbox(code, namespace)
                 keys_after = set(namespace.keys())
                 new_keys = keys_after - keys_before
 
