@@ -9,7 +9,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.services.llm_parser import parse_problem_to_plan
 from app.services.symbolic_engine import execute_plan
-from app.services.verifier import verify_plan_execution
+from app.services.verifier import (
+    verify_plan_execution,
+    _values_match,
+    _parse_safely,
+    _strip_approximation_suffix,
+)
 from evaluation.test_problems import TEST_PROBLEMS as BASE_PROBLEMS
 from evaluation.test_problems_expansion import NEW_TEST_PROBLEMS
 TEST_PROBLEMS = BASE_PROBLEMS + NEW_TEST_PROBLEMS
@@ -30,6 +35,27 @@ def save_results(results):
         json.dump(results, f, indent=2)
 
 
+def check_ground_truth_accuracy(last_result, expected_answer):
+    """Compares the engine's actual computed answer against the known-correct
+    ground truth for this test case. This is DELIBERATELY independent of
+    verification.is_valid — that field only measures whether the LLM's own
+    self-check agreed with the engine, which is a different signal and can
+    diverge from actual correctness (see 3d_02: the engine computed the
+    correct answer on two separate runs, while the LLM's self-check was
+    wrong both times, with a different wrong guess each run)."""
+    if last_result is None or last_result.startswith("ERROR"):
+        return False
+    try:
+        executed_str = _strip_approximation_suffix(last_result)
+        executed_value = _parse_safely(executed_str)
+        if isinstance(executed_value, list) and len(executed_value) == 1:
+            executed_value = executed_value[0]
+        expected_value = _parse_safely(expected_answer)
+        return _values_match(executed_value, expected_value)
+    except Exception:
+        return False
+
+
 def run_single_test(test_case):
     problem_text = test_case["problem"]
     try:
@@ -45,7 +71,9 @@ def run_single_test(test_case):
             test_passed = not executed_plan.is_solvable
             needs_manual_review = False
         elif expected is not None:
-            test_passed = verification.is_valid
+            # Ground-truth accuracy — compared directly against the known
+            # correct answer, NOT against the LLM's self-check.
+            test_passed = check_ground_truth_accuracy(last_result, expected)
             needs_manual_review = False
         else:
             test_passed = None
@@ -58,7 +86,15 @@ def run_single_test(test_case):
             "expected_answer": expected,
             "is_solvable": executed_plan.is_solvable,
             "final_result": last_result,
-            "verification_passed": verification.is_valid,
+            # self_check_agreed: whether the LLM's own independent claimed
+            # answer matched the engine's output. This is a CONFIDENCE/
+            # RELIABILITY signal, separate from ground-truth accuracy above.
+            # A test can be accuracy-correct (test_passed=True) while the
+            # self-check still disagreed (self_check_agreed=False) — that
+            # means the engine got it right despite the LLM's own sanity
+            # check being wrong, which is exactly the failure mode the
+            # verifier exists to catch and flag, not a scoring bug.
+            "self_check_agreed": verification.is_valid,
             "verification_reason": verification.reason,
             "mismatch_details": verification.mismatch_details,
             "test_passed": test_passed,
@@ -86,6 +122,8 @@ def run_single_test(test_case):
 def compute_test_passed(result, test_case_lookup):
     if "test_passed" in result:
         return result["test_passed"]
+    # Fallback for results saved before this scoring fix — recompute using
+    # the same ground-truth comparison instead of trusting old verification_passed.
     if result["status"] != "COMPLETED":
         return False
     test_case = test_case_lookup.get(result["id"])
@@ -93,6 +131,8 @@ def compute_test_passed(result, test_case_lookup):
         return not result.get("is_solvable", True)
     if test_case and test_case["expected_answer"] is None:
         return None  # needs manual review, old format
+    if test_case:
+        return check_ground_truth_accuracy(result.get("final_result"), test_case["expected_answer"])
     return result.get("verification_passed", False)
 
 
@@ -122,7 +162,8 @@ def run_evaluation():
             if result.get("needs_manual_review"):
                 print(f"    Solvable: {result['is_solvable']} | NEEDS MANUAL REVIEW — check final_result: {result['final_result']}")
             else:
-                print(f"    Solvable: {result['is_solvable']} | Test passed: {result['test_passed']}")
+                agreement_note = "" if result.get("self_check_agreed", True) else " (self-check disagreed, but ground truth still passed)" if result["test_passed"] else ""
+                print(f"    Solvable: {result['is_solvable']} | Test passed: {result['test_passed']}{agreement_note}")
         else:
             print(f"    Error: {result.get('error', 'unknown')[:150]}")
         time.sleep(DELAY_BETWEEN_CALLS_SECONDS)
@@ -145,14 +186,22 @@ def print_summary(results):
     manual_review = [r for r in completed if r.get("needs_manual_review")]
     auto_passed = [r for r in auto_scored if compute_test_passed(r, test_case_lookup)]
 
+    # Self-check agreement rate — a separate reliability/confidence metric,
+    # distinct from ground-truth accuracy above.
+    self_check_scored = [r for r in auto_scored if "self_check_agreed" in r]
+    self_check_agreed = [r for r in self_check_scored if r.get("self_check_agreed")]
+
     print(f"Total test cases: {total}")
     print(f"Completed: {len(completed)} | Errored: {len(errored)}")
-    print(f"Auto-scored, passed: {len(auto_passed)}/{len(auto_scored)}")
+    print(f"Ground-truth accuracy: {len(auto_passed)}/{len(auto_scored)}")
+    if self_check_scored:
+        print(f"LLM self-check agreement rate: {len(self_check_agreed)}/{len(self_check_scored)} "
+              f"(how often the LLM's own independent answer matched the engine — a confidence signal, not accuracy)")
     print(f"Needs manual review (multiple valid answer formats): {len(manual_review)}")
     if manual_review:
         print("  -> " + ", ".join(r["id"] for r in manual_review))
 
-    print("\nBy category:")
+    print("\nBy category (ground-truth accuracy):")
     categories = set(r["category"] for r in results.values())
     for cat in sorted(categories):
         cat_results = [r for r in results.values() if r["category"] == cat]
