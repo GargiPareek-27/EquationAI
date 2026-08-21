@@ -10,8 +10,9 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T07:49:31.065645"
+    "timestamp": "2026-08-12T23:00:23.203169"
   },
   "arith_02": {
     "id": "arith_02",
@@ -23,8 +24,10 @@
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T08:55:55.334031"
+    "timestamp": "2026-08-12T23:00:33.544988"
   },
   "rate_01": {
     "id": "rate_01",
@@ -37,8 +40,9 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:17:45.948697"
+    "timestamp": "2026-08-12T23:00:43.221985"
   },
   "rate_02": {
     "id": "rate_02",
@@ -50,8 +54,10 @@
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T08:59:12.861745"
+    "timestamp": "2026-08-12T23:00:53.623627"
   },
   "algebra_01": {
     "id": "algebra_01",
@@ -63,8 +69,10 @@
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T08:59:26.402761"
+    "timestamp": "2026-08-12T23:01:03.400990"
   },
   "calc_01": {
     "id": "calc_01",
@@ -76,22 +84,10 @@
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
-    "status": "COMPLETED",
-    "timestamp": "2026-07-10T08:59:35.830586"
-  },
-  "calc_02": {
-    "id": "calc_02",
-    "category": "area_between_curves",
-    "problem": "Find the area between the curves y = x^2 and y = 4.",
-    "expected_answer": "32/3",
-    "is_solvable": true,
-    "final_result": "32/3",
-    "verification_passed": true,
-    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
-    "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:17:57.162290"
+    "timestamp": "2026-08-12T23:01:13.000224"
   },
   "calc_hard_01": {
     "id": "calc_hard_01",
@@ -104,8 +100,24 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:18:24.730104"
+    "timestamp": "2026-08-15T14:57:30.042217"
+  },
+  "calc_hard_02": {
+    "id": "calc_hard_02",
+    "category": "hard_integration",
+    "problem": "Evaluate the definite integral of ln(1 + tan(x)) from 0 to pi/4.",
+    "expected_answer": "pi*log(2)/8",
+    "is_solvable": true,
+    "final_result": "0.2722 (numerically approximated - closed-form not found)",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T14:58:12.648824"
   },
   "ambiguous_01": {
     "id": "ambiguous_01",
@@ -115,10 +127,22 @@
     "is_solvable": false,
     "final_result": null,
     "verification_passed": false,
-    "verification_reason": "Marked unsolvable: The problem asks to 'Find x' but does not provide any equation or context in which 'x' is defined or related to other quantities. Please provide an equation or more information.",
+    "verification_reason": "Marked unsolvable: The problem is underspecified. No equation or context is provided to find 'x'. Please provide an equation or more information.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:09:38.115052"
+    "timestamp": "2026-08-15T14:58:19.987429",
+    "full_plan_debug": {
+      "problem_type": "algebra",
+      "is_solvable": false,
+      "clarification_needed": "The problem is underspecified. No equation or context is provided to find 'x'. Please provide an equation or more information.",
+      "variables": [],
+      "steps": [],
+      "final_answer_variable": null,
+      "final_answer_units": null,
+      "expected_final_answer_sympy": null
+    }
   },
   "ambiguous_02": {
     "id": "ambiguous_02",
@@ -128,10 +152,52 @@
     "is_solvable": false,
     "final_result": "Eq(J, 2*F)",
     "verification_passed": false,
-    "verification_reason": "Marked unsolvable: The problem provides one equation (J = 2F) but has two unknown variables (John's age and friend's age). To find a specific numerical value for John's age, more information or another independent equation is required.",
+    "verification_reason": "Marked unsolvable: The problem states a relationship between John's age and his friend's age but does not provide enough information to determine their specific ages. We need at least one more piece of information (e.g., the friend's age, their combined age, or their age difference) to solve for John's age.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:09:46.945404"
+    "timestamp": "2026-08-15T14:58:29.685820",
+    "full_plan_debug": {
+      "problem_type": "word_problem",
+      "is_solvable": false,
+      "clarification_needed": "The problem states a relationship between John's age and his friend's age but does not provide enough information to determine their specific ages. We need at least one more piece of information (e.g., the friend's age, their combined age, or their age difference) to solve for John's age.",
+      "variables": [
+        {
+          "symbol": "J",
+          "description": "John's age",
+          "domain": "positive_integer"
+        },
+        {
+          "symbol": "F",
+          "description": "Friend's age",
+          "domain": "positive_integer"
+        }
+      ],
+      "steps": [
+        {
+          "step_id": 1,
+          "description_latex": "Let $J$ represent John's age and $F$ represent his friend's age.",
+          "sympy_expr": "J, F = symbols('J F', positive=True, integer=True)",
+          "operation_type": "define_variable",
+          "depends_on": [],
+          "result": "{'F': 'F', 'J': 'J'}"
+        },
+        {
+          "step_id": 2,
+          "description_latex": "Translate the statement 'John is twice as old as his friend' into an equation.",
+          "sympy_expr": "equation = Eq(J, 2 * F)",
+          "operation_type": "form_equation",
+          "depends_on": [
+            1
+          ],
+          "result": "Eq(J, 2*F)"
+        }
+      ],
+      "final_answer_variable": null,
+      "final_answer_units": null,
+      "expected_final_answer_sympy": null
+    }
   },
   "nonsense_01": {
     "id": "nonsense_01",
@@ -141,24 +207,52 @@
     "is_solvable": false,
     "final_result": null,
     "verification_passed": false,
-    "verification_reason": "Marked unsolvable: Numbers do not inherently have colors. This question is not a mathematical problem.",
+    "verification_reason": "Marked unsolvable: The question 'What color is the number seven?' is subjective and not a mathematical problem. Numbers do not inherently have colors. This query cannot be solved using mathematical logic or computations.",
     "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-10T09:09:53.780395"
+    "timestamp": "2026-08-15T14:58:40.849106",
+    "full_plan_debug": {
+      "problem_type": "word_problem",
+      "is_solvable": false,
+      "clarification_needed": "The question 'What color is the number seven?' is subjective and not a mathematical problem. Numbers do not inherently have colors. This query cannot be solved using mathematical logic or computations.",
+      "variables": [],
+      "steps": [],
+      "final_answer_variable": null,
+      "final_answer_units": null,
+      "expected_final_answer_sympy": null
+    }
   },
-  "calc_hard_02": {
-    "id": "calc_hard_02",
-    "category": "hard_integration",
-    "problem": "Evaluate the definite integral of ln(1 + tan(x)) from 0 to pi/4.",
-    "expected_answer": "pi*log(2)/8",
+  "de_01": {
+    "id": "de_01",
+    "category": "differential_equations",
+    "problem": "Solve the differential equation dy/dx = 2xy with the initial condition y(0) = 1.",
+    "expected_answer": "exp(x**2)",
     "is_solvable": true,
-    "final_result": "pi*log(2)/8",
+    "final_result": "exp(x**2)",
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T07:52:25.446382"
+    "timestamp": "2026-08-15T14:59:12.662966"
+  },
+  "de_02": {
+    "id": "de_02",
+    "category": "differential_equations",
+    "problem": "Find the general solution to the differential equation y'' - 5y' + 6y = 0.",
+    "expected_answer": null,
+    "is_solvable": true,
+    "final_result": "Eq(y(x), (C1 + C2*exp(x))*exp(2*x))",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": null,
+    "needs_manual_review": true,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T14:59:22.228850"
   },
   "prob_01": {
     "id": "prob_01",
@@ -166,13 +260,14 @@
     "problem": "A bag contains 5 red balls and 3 blue balls. If 2 balls are drawn at random without replacement, what is the probability that both are red?",
     "expected_answer": "5/14",
     "is_solvable": true,
-    "final_result": "0.3571",
+    "final_result": "5/14",
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:00:48.677092"
+    "timestamp": "2026-08-15T14:59:36.867272"
   },
   "prob_02": {
     "id": "prob_02",
@@ -185,8 +280,9 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:10:36.400671"
+    "timestamp": "2026-08-15T14:59:48.000016"
   },
   "geo_01": {
     "id": "geo_01",
@@ -199,65 +295,9 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
+    "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:01:31.190511"
-  },
-  "series_01": {
-    "id": "series_01",
-    "category": "series",
-    "problem": "Find the sum of the infinite geometric series 1 + 1/3 + 1/9 + 1/27 + ...",
-    "expected_answer": "3/2",
-    "is_solvable": true,
-    "final_result": "3/2",
-    "verification_passed": true,
-    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
-    "mismatch_details": null,
-    "test_passed": true,
-    "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:01:53.818687"
-  },
-  "matrix_01": {
-    "id": "matrix_01",
-    "category": "linear_algebra",
-    "problem": "Find the determinant of the matrix [[2, 3], [4, 1]].",
-    "expected_answer": "-10",
-    "is_solvable": true,
-    "final_result": "-10",
-    "verification_passed": true,
-    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
-    "mismatch_details": null,
-    "test_passed": true,
-    "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:02:01.498778"
-  },
-  "ambiguous_03": {
-    "id": "ambiguous_03",
-    "category": "ambiguous_input",
-    "problem": "A rectangle has a perimeter of 20. What is its area?",
-    "expected_answer": null,
-    "is_solvable": false,
-    "final_result": "Eq(A, l*w)",
-    "verification_passed": false,
-    "verification_reason": "Marked unsolvable: The problem provides the perimeter of a rectangle, but not enough information (e.g., ratio of sides, one side length, or type of rectangle like square) to uniquely determine its length and width. Therefore, the area cannot be uniquely determined, as various combinations of length and width that result in a perimeter of 20 will yield different areas (e.g., l=1, w=9 -> A=9; l=5, w=5 -> A=25).",
-    "mismatch_details": null,
-    "test_passed": true,
-    "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:02:23.640399"
-  },
-  "de_02": {
-    "id": "de_02",
-    "category": "differential_equations",
-    "problem": "Find the general solution to the differential equation y'' - 5y' + 6y = 0.",
-    "expected_answer": null,
-    "is_solvable": true,
-    "final_result": "C1*exp(2*x) + C2*exp(3*x)",
-    "verification_passed": true,
-    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
-    "mismatch_details": null,
-    "test_passed": null,
-    "status": "COMPLETED",
-    "timestamp": "2026-07-11T08:10:22.995204",
-    "needs_manual_review": true
+    "timestamp": "2026-08-15T15:00:04.345166"
   },
   "geo_02": {
     "id": "geo_02",
@@ -270,9 +310,39 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": null,
+    "needs_manual_review": true,
     "status": "COMPLETED",
-    "timestamp": "2026-07-13T07:39:38.792072",
-    "needs_manual_review": true
+    "timestamp": "2026-08-15T15:00:40.141748"
+  },
+  "series_01": {
+    "id": "series_01",
+    "category": "series",
+    "problem": "Find the sum of the infinite geometric series 1 + 1/3 + 1/9 + 1/27 + ...",
+    "expected_answer": "3/2",
+    "is_solvable": true,
+    "final_result": "3/2",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:00:48.792755"
+  },
+  "matrix_01": {
+    "id": "matrix_01",
+    "category": "linear_algebra",
+    "problem": "Find the determinant of the matrix [[2, 3], [4, 1]].",
+    "expected_answer": "-10",
+    "is_solvable": true,
+    "final_result": "-10",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:01:09.257954"
   },
   "calc_hard_03": {
     "id": "calc_hard_03",
@@ -285,23 +355,192 @@
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": null,
+    "needs_manual_review": true,
     "status": "COMPLETED",
-    "timestamp": "2026-07-13T07:39:47.862686",
-    "needs_manual_review": true
+    "timestamp": "2026-08-15T15:01:21.343275"
   },
-  "de_01": {
-    "id": "de_01",
-    "category": "differential_equations",
-    "problem": "Solve the differential equation dy/dx = 2xy with the initial condition y(0) = 1.",
-    "expected_answer": "exp(x**2)",
+  "ambiguous_03": {
+    "id": "ambiguous_03",
+    "category": "ambiguous_input",
+    "problem": "A rectangle has a perimeter of 20. What is its area?",
+    "expected_answer": null,
+    "is_solvable": false,
+    "final_result": "Eq(A, L*W)",
+    "verification_passed": false,
+    "verification_reason": "Marked unsolvable: The dimensions (length and width) of the rectangle are not uniquely determined by the perimeter alone. Therefore, the area cannot be calculated uniquely. More information, such as the length of one side or a relationship between the sides, is needed.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:01:31.182321",
+    "full_plan_debug": {
+      "problem_type": "geometry",
+      "is_solvable": false,
+      "clarification_needed": "The dimensions (length and width) of the rectangle are not uniquely determined by the perimeter alone. Therefore, the area cannot be calculated uniquely. More information, such as the length of one side or a relationship between the sides, is needed.",
+      "variables": [
+        {
+          "symbol": "P",
+          "description": "Perimeter of the rectangle",
+          "domain": "positive_real"
+        },
+        {
+          "symbol": "L",
+          "description": "Length of the rectangle",
+          "domain": "positive_real"
+        },
+        {
+          "symbol": "W",
+          "description": "Width of the rectangle",
+          "domain": "positive_real"
+        },
+        {
+          "symbol": "A",
+          "description": "Area of the rectangle",
+          "domain": "positive_real"
+        }
+      ],
+      "steps": [
+        {
+          "step_id": 1,
+          "description_latex": "Define variables for perimeter, length, width, and area.",
+          "sympy_expr": "P, L, W, A = symbols('P L W A', positive=True)",
+          "operation_type": "define_variable",
+          "depends_on": [],
+          "result": "{'A': 'A', 'L': 'L', 'W': 'W', 'P': 'P'}"
+        },
+        {
+          "step_id": 2,
+          "description_latex": "Given perimeter of the rectangle is 20.",
+          "sympy_expr": "P = 20",
+          "operation_type": "given_information",
+          "depends_on": [
+            1
+          ],
+          "result": "OK"
+        },
+        {
+          "step_id": 3,
+          "description_latex": "State the formula for the perimeter of a rectangle.",
+          "sympy_expr": "perimeter_formula = Eq(P, 2*(L + W))",
+          "operation_type": "form_equation",
+          "depends_on": [
+            1
+          ],
+          "result": "Eq(20, 2*L + 2*W)"
+        },
+        {
+          "step_id": 4,
+          "description_latex": "Substitute the given perimeter into the formula.",
+          "sympy_expr": "perimeter_eq_solved = Eq(2*(L + W), P).subs(P, 20)",
+          "operation_type": "substitute",
+          "depends_on": [
+            2,
+            3
+          ],
+          "result": "Eq(2*L + 2*W, 20)"
+        },
+        {
+          "step_id": 5,
+          "description_latex": "Simplify the perimeter equation to express the relationship between length and width.",
+          "sympy_expr": "L_plus_W_eq = Eq(L + W, 20/2)",
+          "operation_type": "simplify",
+          "depends_on": [
+            4
+          ],
+          "result": "Eq(L + W, 10.0)"
+        },
+        {
+          "step_id": 6,
+          "description_latex": "State the formula for the area of a rectangle.",
+          "sympy_expr": "area_formula = Eq(A, L * W)",
+          "operation_type": "form_equation",
+          "depends_on": [
+            1
+          ],
+          "result": "Eq(A, L*W)"
+        }
+      ],
+      "final_answer_variable": null,
+      "final_answer_units": null,
+      "expected_final_answer_sympy": null
+    }
+  },
+  "complex_01": {
+    "id": "complex_01",
+    "category": "complex_numbers",
+    "problem": "Compute (3+4i)*(1-2i) and simplify to the form a+bi.",
+    "expected_answer": "11 - 2*I",
     "is_solvable": true,
-    "final_result": "Eq(y(x), exp(x**2))",
+    "final_result": "11 - 2*I",
     "verification_passed": true,
     "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
     "mismatch_details": null,
     "test_passed": true,
     "needs_manual_review": false,
     "status": "COMPLETED",
-    "timestamp": "2026-07-13T07:49:38.591200"
+    "timestamp": "2026-08-15T15:01:39.345946"
+  },
+  "complex_02": {
+    "id": "complex_02",
+    "category": "complex_numbers",
+    "problem": "Find the modulus of the complex number 3 + 4i.",
+    "expected_answer": "5",
+    "is_solvable": true,
+    "final_result": "5",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:01:48.050344"
+  },
+  "3d_01": {
+    "id": "3d_01",
+    "category": "3d_geometry",
+    "problem": "Find the distance between the points (1, 2, 2) and (4, 6, 2) in 3D space.",
+    "expected_answer": "5",
+    "is_solvable": true,
+    "final_result": "5",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:01:57.925534"
+  },
+  "limits_01": {
+    "id": "limits_01",
+    "category": "limits",
+    "problem": "Evaluate the limit of sin(x)/x as x approaches 0.",
+    "expected_answer": "1",
+    "is_solvable": true,
+    "final_result": "1",
+    "verification_passed": true,
+    "verification_reason": "All steps executed successfully and final answer matches LLM's independent claim.",
+    "mismatch_details": null,
+    "test_passed": true,
+    "needs_manual_review": false,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-15T15:03:08.870843"
+  },
+  "limits_02": {
+    "id": "limits_02",
+    "category": "limits",
+    "problem": "Evaluate the limit of (3x^2 + 2x)/(x^2 - 5) as x approaches infinity.",
+    "expected_answer": "3",
+    "status": "ERROR",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 13.631742056s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '13s'}]}}",
+    "timestamp": "2026-08-15T15:04:45.780730"
+  },
+  "calc_02": {
+    "id": "calc_02",
+    "category": "area_between_curves",
+    "problem": "Find the area between the curves y = x^2 and y = 4.",
+    "expected_answer": "32/3",
+    "status": "ERROR",
+    "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-2.5-flash\\nPlease retry in 44.521172642s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '44s'}]}}",
+    "timestamp": "2026-08-15T15:20:15.036891"
   }
 }
