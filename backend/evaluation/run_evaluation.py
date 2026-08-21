@@ -10,7 +10,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from app.services.llm_parser import parse_problem_to_plan
 from app.services.symbolic_engine import execute_plan
 from app.services.verifier import verify_plan_execution
-from evaluation.test_problems import TEST_PROBLEMS
+from evaluation.test_problems import TEST_PROBLEMS as BASE_PROBLEMS
+from evaluation.test_problems_expansion import NEW_TEST_PROBLEMS
+TEST_PROBLEMS = BASE_PROBLEMS + NEW_TEST_PROBLEMS
 
 RESULTS_FILE = os.path.join(os.path.dirname(__file__), "evaluation_results.json")
 DELAY_BETWEEN_CALLS_SECONDS = 5
