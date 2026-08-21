@@ -570,91 +570,6 @@
     "status": "COMPLETED",
     "timestamp": "2026-08-21T16:45:04.366933"
   },
-  "eigen_01": {
-    "id": "eigen_01",
-    "category": "linear_algebra",
-    "problem": "Find the eigenvalues of the matrix [[4, 1], [2, 3]].",
-    "expected_answer": null,
-    "is_solvable": true,
-    "final_result": "[]",
-    "verification_passed": false,
-    "verification_reason": "Could not verify LLM's claimed answer against engine output (parsing error).",
-    "mismatch_details": "'list' object has no attribute 'evalf'",
-    "test_passed": null,
-    "needs_manual_review": true,
-    "status": "COMPLETED",
-    "timestamp": "2026-08-21T16:45:14.922970",
-    "full_plan_debug": {
-      "problem_type": "algebra",
-      "is_solvable": true,
-      "clarification_needed": null,
-      "variables": [
-        {
-          "symbol": "A",
-          "description": "The given matrix",
-          "domain": null
-        },
-        {
-          "symbol": "lamda",
-          "description": "Eigenvalue",
-          "domain": null
-        }
-      ],
-      "steps": [
-        {
-          "step_id": 1,
-          "description_latex": "Define the given matrix $A$.",
-          "sympy_expr": "A = Matrix([[4, 1], [2, 3]])",
-          "operation_type": "define_matrix",
-          "depends_on": [],
-          "result": "Matrix([[4, 1], [2, 3]])"
-        },
-        {
-          "step_id": 2,
-          "description_latex": "Define the eigenvalue $\\lambda$ as a symbol.",
-          "sympy_expr": "lamda = symbols('lamda')",
-          "operation_type": "define_variable",
-          "depends_on": [],
-          "result": "lamda"
-        },
-        {
-          "step_id": 3,
-          "description_latex": "Form the characteristic matrix $A - \\lambda I$, where $I$ is the identity matrix.",
-          "sympy_expr": "characteristic_matrix = A - lamda * Identity(2)",
-          "operation_type": "matrix_subtraction",
-          "depends_on": [
-            1,
-            2
-          ],
-          "result": "(-lamda)*I + Matrix([\n[4, 1],\n[2, 3]])"
-        },
-        {
-          "step_id": 4,
-          "description_latex": "Calculate the determinant of the characteristic matrix and set it to zero to form the characteristic equation: $\\det(A - \\lambda I) = 0$.",
-          "sympy_expr": "characteristic_equation = Eq(characteristic_matrix.det(), 0)",
-          "operation_type": "form_equation",
-          "depends_on": [
-            3
-          ],
-          "result": "Eq(Determinant((-lamda)*I + Matrix([\n[4, 1],\n[2, 3]])), 0)"
-        },
-        {
-          "step_id": 5,
-          "description_latex": "Solve the characteristic equation for $\\lambda$ to find the eigenvalues.",
-          "sympy_expr": "eigenvalues = solve(characteristic_equation, lamda)",
-          "operation_type": "solve_equation",
-          "depends_on": [
-            4
-          ],
-          "result": "[]"
-        }
-      ],
-      "final_answer_variable": "eigenvalues",
-      "final_answer_units": null,
-      "expected_final_answer_sympy": "[2, 5]",
-      "verification_warning": null
-    }
-  },
   "multipart_01": {
     "id": "multipart_01",
     "category": "multi_part_word_problem",
@@ -1058,5 +973,50 @@
     "needs_manual_review": false,
     "status": "COMPLETED",
     "timestamp": "2026-08-21T16:56:42.210238"
+  },
+  "eigen_01": {
+    "id": "eigen_01",
+    "category": "linear_algebra",
+    "problem": "Find the eigenvalues of the matrix [[4, 1], [2, 3]].",
+    "expected_answer": null,
+    "is_solvable": true,
+    "final_result": "{5: 1, 2: 1}",
+    "self_check_agreed": false,
+    "verification_reason": "Could not verify LLM's claimed answer against engine output (parsing error).",
+    "mismatch_details": "'Dict' object has no attribute 'evalf'",
+    "test_passed": null,
+    "needs_manual_review": true,
+    "status": "COMPLETED",
+    "timestamp": "2026-08-21T17:01:10.821005",
+    "full_plan_debug": {
+      "problem_type": "algebra",
+      "is_solvable": true,
+      "clarification_needed": null,
+      "variables": [],
+      "steps": [
+        {
+          "step_id": 1,
+          "description_latex": "Define the given matrix $A = \\begin{pmatrix} 4 & 1 \\\\ 2 & 3 \\end{pmatrix}$.",
+          "sympy_expr": "A = Matrix([[4, 1], [2, 3]])",
+          "operation_type": "define_matrix",
+          "depends_on": [],
+          "result": "Matrix([[4, 1], [2, 3]])"
+        },
+        {
+          "step_id": 2,
+          "description_latex": "Calculate the eigenvalues of matrix $A$. The result is a dictionary where keys are eigenvalues and values are their multiplicities.",
+          "sympy_expr": "eigenvalues = A.eigenvals()",
+          "operation_type": "calculate_eigenvalues",
+          "depends_on": [
+            1
+          ],
+          "result": "{5: 1, 2: 1}"
+        }
+      ],
+      "final_answer_variable": "eigenvalues",
+      "final_answer_units": null,
+      "expected_final_answer_sympy": "{5: 1, 2: 1}",
+      "verification_warning": null
+    }
   }
 }
